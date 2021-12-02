@@ -5,8 +5,8 @@ const solc = require("solc");
 const path = require("path");
 const fs = require("fs");
 
-const InboxPath = path.resolve(__dirname, "contracts", "Inbox.sol");
-const source = fs.readFileSync(InboxPath, "utf8");
+const contractPath = path.resolve(__dirname, "contracts", "Lottery.sol");
+const source = fs.readFileSync(contractPath, "utf8");
 
 const compiled = solc.compile(source, 1);
-module.exports = compiled.contracts[":Inbox"];
+module.exports = compiled.contracts[":Lottery"];
