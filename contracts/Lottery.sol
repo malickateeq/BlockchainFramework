@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity >=0.4.16 <0.9.0;
+
+pragma solidity >=0.7.0 <0.9.0;
 
 contract Lottery 
 {
@@ -14,7 +15,7 @@ contract Lottery
     function enter() public payable
     {
         require(msg.value > 0.01 ether);
-        players.push(msg.sender);
+        players.push( payable(msg.sender) );
     }
 
     function random() private pure returns (uint)
@@ -23,13 +24,22 @@ contract Lottery
         // return uint(keccak256(block.difficulty, now, players));
     }
     
-    function pickWinner() public
+    function pickWinner() public restricted
     {
-        // Validate manager
-        require(msg.sender == manager);
-
         uint index = random() % players.length;
         players[index].transfer( address(this).balance );
-        players = new address[](0);
+        players = new address payable [] (0);
+    }
+
+    modifier restricted()
+    {
+        require(msg.sender == manager);
+        _;
+    }
+
+    function getPlayers() public view returns(address payable [] memory)
+    {
+        require(msg.sender == manager);
+        return players;
     }
 }

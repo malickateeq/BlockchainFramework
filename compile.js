@@ -8,5 +8,28 @@ const fs = require("fs");
 const contractPath = path.resolve(__dirname, "contracts", "Lottery.sol");
 const source = fs.readFileSync(contractPath, "utf8");
 
-const compiled = solc.compile(source, 1);
-module.exports = compiled.contracts[":Lottery"];
+var sourceInput = {
+    language: 'Solidity',
+    sources: {
+        'test.sol': {
+            content: source,
+        }
+    },
+    settings: 
+    {
+        outputSelection: {
+            '*': { '*': ['*'] }
+        }
+    }
+};
+var compiled = JSON.parse(solc.compile(JSON.stringify(sourceInput)));
+// for (var contractName in output.contracts['test.sol']) 
+// {
+//     console.log(
+//       contractName +
+//         ': ' +
+//         output.contracts['test.sol'][contractName].evm.bytecode.object
+//     );
+// }
+
+module.exports = compiled.contracts["test.sol"]["Lottery"];
